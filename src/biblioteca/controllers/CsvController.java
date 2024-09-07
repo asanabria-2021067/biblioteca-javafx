@@ -108,7 +108,6 @@ public class CsvController {
         }
     }
 
-// Cargar préstamos desde un archivo CSV
 public static List<Prestamo> cargarPrestamosDesdeCSV(String archivo, List<Libro> libros, List<Miembro> miembros) throws IOException {
     List<Prestamo> prestamos = new ArrayList<>();
     try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
@@ -116,16 +115,16 @@ public static List<Prestamo> cargarPrestamosDesdeCSV(String archivo, List<Libro>
         reader.readLine(); // Saltar la línea de encabezado
         while ((linea = reader.readLine()) != null) {
             String[] partes = linea.split(",");
-            if (partes.length == 5) {
-                Libro libro = buscarLibroPorISBN(partes[0], libros);
-                Miembro miembro = buscarMiembroPorID(partes[1], miembros);
+            if (partes != null ) {
+                // Buscar libro y miembro
+                Libro libro = buscarLibroPorISBN(partes[0].trim(), libros);
+                Miembro miembro = buscarMiembroPorID(partes[1].trim(), miembros);
                 if (libro != null && miembro != null) {
-                    LocalDate fechaPrestamo = parseFecha(partes[2]);
-                    LocalDate fechaDevolucionEsperada = parseFecha(partes[3]);
-                    LocalDate fechaDevolucionReal = parseFecha(partes[4]);
-                    System.out.println(Arrays.toString(partes));
+                    LocalDate fechaPrestamo = parseFecha(partes[2].trim());
+                    LocalDate fechaDevolucionEsperada = parseFecha(partes[3].trim());
+                    LocalDate fechaDevolucionReal = parseFecha(partes.length > 4 ? partes[4].trim() : "");
 
-                    // Crear el préstamo con la fecha de devolución real opcional
+                    // Crear el préstamo
                     Prestamo prestamo = new Prestamo(libro, miembro, fechaPrestamo, fechaDevolucionEsperada, fechaDevolucionReal);
                     prestamos.add(prestamo);
                 } else {
@@ -155,24 +154,24 @@ private static LocalDate parseFecha(String fecha) {
     }
 }
 
-
-    // Buscar libro por ISBN en la lista de libros
-    private static Libro buscarLibroPorISBN(String isbn, List<Libro> libros) {
-        for (Libro libro : libros) {
-            if (libro.getISBN().get().equals(isbn)) {
-                return libro;
-            }
+// Buscar libro por ISBN en la lista de libros
+private static Libro buscarLibroPorISBN(String isbn, List<Libro> libros) {
+    for (Libro libro : libros) {
+        if (libro.getISBN().get().equals(isbn)) {
+            return libro;
         }
-        return null;
     }
+    return null;
+}
 
-    // Buscar miembro por ID en la lista de miembros
-    private static Miembro buscarMiembroPorID(String id, List<Miembro> miembros) {
-        for (Miembro miembro : miembros) {
-            if (miembro.getId().get().equals(id)) {
-                return miembro;
-            }
+// Buscar miembro por ID en la lista de miembros
+private static Miembro buscarMiembroPorID(String id, List<Miembro> miembros) {
+    for (Miembro miembro : miembros) {
+        if (miembro.getId().get().equals(id)) {
+            return miembro;
         }
-        return null;
     }
+    return null;
+}
+
 }

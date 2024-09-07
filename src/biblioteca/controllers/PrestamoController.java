@@ -131,26 +131,45 @@ public class PrestamoController {
             int diasPrestamo = Integer.parseInt(diasPrestamoTexto);
             Libro libro = buscarLibroPorISBN(isbn);
             Miembro miembro = buscarMiembroPorID(miembroID);
-
             if (libro != null && miembro != null && libro.isDisponible()) {
-                LocalDate fechaPrestamo = LocalDate.now();
-                LocalDate fechaDevolucionEsperada = fechaPrestamo.plusDays(diasPrestamo);
-                Prestamo nuevoPrestamo = new Prestamo(libro, miembro, fechaPrestamo, fechaDevolucionEsperada);
-                listaPrestamos.add(nuevoPrestamo);
+                if (libro != null && miembro != null && libro.isDisponible()) {
+                    // Verificar si el libro ya está prestado y no ha sido devuelto
+                    if (esLibroEnPrestamo(libro)) {
+                        mostrarAlertaError("Libro ya prestado", "El libro ya está en préstamo y no ha sido devuelto.");
+                        return;
+                    }
+                    LocalDate fechaPrestamo = LocalDate.now();
+                    LocalDate fechaDevolucionEsperada = fechaPrestamo.plusDays(diasPrestamo);
+                    Prestamo nuevoPrestamo = new Prestamo(libro, miembro, fechaPrestamo, fechaDevolucionEsperada);
+                    listaPrestamos.add(nuevoPrestamo);
+                    EstadisticasController estadisticas = new EstadisticasController();
+                    estadisticas.cargarDatos();
+                    try {
+                        CsvController.guardarPrestamosEnCSV(listaPrestamos, RUTA_PRESTAMOS);
+                    } catch (IOException e) {
+                        mostrarAlertaError("Error al guardar", "No se pudo guardar el préstamo en el archivo CSV.");
+                    }
 
-                try {
-                    CsvController.guardarPrestamosEnCSV(listaPrestamos, RUTA_PRESTAMOS);
-                } catch (IOException e) {
-                    mostrarAlertaError("Error al guardar", "No se pudo guardar el préstamo en el archivo CSV.");
+                    limpiarCampos();
+                } else {
+                    mostrarAlertaError("Datos incorrectos", "Libro no disponible o miembro no encontrado.");
                 }
-
-                limpiarCampos();
-            } else {
-                mostrarAlertaError("Datos incorrectos", "Libro no disponible o miembro no encontrado.");
             }
         } catch (NumberFormatException e) {
             mostrarAlertaError("Error de formato", "El campo de días de préstamo debe ser un número válido.");
         }
+
+    }
+
+    private boolean esLibroEnPrestamo(Libro libro) {
+        LocalDate hoy = LocalDate.now();
+        for (Prestamo prestamo : listaPrestamos) {
+            if (prestamo.getLibro().equals(libro) && prestamo.getFechaDevolucionReal().get() == null) {
+                // El libro está en préstamo y aún no ha sido devuelto
+                return true;
+            }
+        }
+        return false;
     }
 
     private void limpiarCampos() {

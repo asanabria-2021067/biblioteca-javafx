@@ -102,7 +102,7 @@ public class EstadisticasController {
         panelTabla.setVisible(true);
     }
 
-   private void cargarDatos() {
+   public void cargarDatos() {
     // Cargar libros
     try (BufferedReader br = new BufferedReader(new FileReader("src/biblioteca/db/libros.csv"))) {
         String line;
