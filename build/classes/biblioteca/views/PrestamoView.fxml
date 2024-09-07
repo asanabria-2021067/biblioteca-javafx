@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="348.0" prefWidth="824.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="biblioteca.controllers.PrestamoController">
+    <children>
+        <TableView fx:id="tablaPrestamos" layoutX="23.0" prefHeight="228.0" prefWidth="776.0">
+            <columns>
+                <TableColumn fx:id="columnaLibro" prefWidth="136.0" text="Libro" />
+                <TableColumn fx:id="columnaMiembro" prefWidth="130.0" text="Miembro" />
+                <TableColumn fx:id="columnaFechaPrestamo" prefWidth="133.0" text="Fecha de Préstamo" />
+                <TableColumn fx:id="columnaFechaDevolucion" minWidth="0.0" prefWidth="185.0" text="Fecha de Devolución Esperada" />
+                <TableColumn fx:id="columnaFechaDevolucionReal" prefWidth="196.0" text="Fecha de Devolución Real" />
+            </columns>
+        </TableView>
+        <TextField fx:id="textFieldISBN" layoutX="256.0" layoutY="242.0" prefHeight="37.0" prefWidth="149.0" promptText="ISBN del Libro" />
+        <TextField fx:id="textFieldMiembroID" layoutX="413.0" layoutY="242.0" prefHeight="37.0" prefWidth="149.0" promptText="ID del Miembro" />
+        <TextField fx:id="textFieldDias" layoutX="101.0" layoutY="242.0" prefHeight="37.0" prefWidth="149.0" promptText="Días de Préstamo" />
+        <HBox layoutY="210" spacing="10" />
+        <Button layoutX="586.0" layoutY="242.0" onAction="#registrarPrestamo" prefHeight="37.0" prefWidth="138.0" style="-fx-background-color: lightgreen; -fx-text-fill: white; -fx-font-weight: bolder;" text="Registrar Préstamo" />
+        <Button layoutX="358.0" layoutY="297.0" onAction="#devolverLibro" prefHeight="37.0" prefWidth="114.0" style="-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;" text="Devolver Libro" />
+    </children>
+</AnchorPane>

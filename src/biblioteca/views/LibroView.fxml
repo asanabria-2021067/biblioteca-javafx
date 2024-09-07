@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="364.0" prefWidth="806.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="biblioteca.controllers.LibroController">
+    <children>
+        <TableView fx:id="tablaLibros" layoutX="26.0" prefHeight="258.0" prefWidth="764.0">
+            <columns>
+                <TableColumn fx:id="columnaISBN" prefWidth="182.0" text="ISBN" />
+                <TableColumn fx:id="columnaTitulo" prefWidth="153.0" text="Título" />
+                <TableColumn fx:id="columnaAutor" prefWidth="152.0" text="Autor" />
+                <TableColumn fx:id="columnaAnio" prefWidth="119.0" text="Año" />
+                <TableColumn fx:id="columnaGenero" prefWidth="157.0" text="Género" />
+            </columns>
+        </TableView>
+        <HBox layoutY="210" spacing="10" />
+          <Button fx:id="botonEliminar" layoutX="678.0" layoutY="283.0" onAction="#eliminarLibro" prefHeight="47.0" prefWidth="112.0" style="-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;" text="Eliminar" />
+          <Button fx:id="botonEditar" layoutX="347.0" layoutY="283.0" onAction="#editarLibro" prefHeight="47.0" prefWidth="112.0" style="-fx-background-color: orange; -fx-text-fill: white; -fx-font-weight: bolder;" text="Editar" />
+          <Button fx:id="botonAgregar" layoutX="26.0" layoutY="283.0" onAction="#agregarLibro" prefHeight="47.0" prefWidth="112.0" style="-fx-background-color: lightgreen; -fx-text-fill: white; -fx-font-weight: bold;" text="Agregar" />
+    </children>
+</AnchorPane>

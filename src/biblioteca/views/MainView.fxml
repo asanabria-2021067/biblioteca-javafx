@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="biblioteca.controllers.MainController">
+    <children>
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Libros">
+                    <content>
+                        <AnchorPane prefHeight="252.0" prefWidth="625.0">
+                            <fx:include source="LibroView.fxml" />
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Miembros">
+                    <content>
+                        <AnchorPane>
+                            <fx:include source="MiembroView.fxml" />
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Préstamos">
+                    <content>
+                        <AnchorPane>
+                            <fx:include source="PrestamoView.fxml" />
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Estadísticas">
+                    <content>
+                        <AnchorPane>
+                            <fx:include source="EstadisticasView.fxml" />
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+</AnchorPane>
