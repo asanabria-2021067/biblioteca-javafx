@@ -108,70 +108,104 @@ public class CsvController {
         }
     }
 
-public static List<Prestamo> cargarPrestamosDesdeCSV(String archivo, List<Libro> libros, List<Miembro> miembros) throws IOException {
-    List<Prestamo> prestamos = new ArrayList<>();
-    try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
-        String linea;
-        reader.readLine(); // Saltar la línea de encabezado
-        while ((linea = reader.readLine()) != null) {
-            String[] partes = linea.split(",");
-            if (partes != null ) {
-                // Buscar libro y miembro
-                Libro libro = buscarLibroPorISBN(partes[0].trim(), libros);
-                Miembro miembro = buscarMiembroPorID(partes[1].trim(), miembros);
-                if (libro != null && miembro != null) {
-                    LocalDate fechaPrestamo = parseFecha(partes[2].trim());
-                    LocalDate fechaDevolucionEsperada = parseFecha(partes[3].trim());
-                    LocalDate fechaDevolucionReal = parseFecha(partes.length > 4 ? partes[4].trim() : "");
+    public static List<Prestamo> cargarPrestamosDesdeCSV(String archivo, List<Libro> libros, List<Miembro> miembros) throws IOException {
+        List<Prestamo> prestamos = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            reader.readLine(); // Saltar la línea de encabezado
+            while ((linea = reader.readLine()) != null) {
+                String[] partes = linea.split(",");
+                if (partes != null) {
+                    // Buscar libro y miembro
+                    Libro libro = buscarLibroPorISBN(partes[0].trim(), libros);
+                    Miembro miembro = buscarMiembroPorID(partes[1].trim(), miembros);
+                    if (libro != null && miembro != null) {
+                        LocalDate fechaPrestamo = parseFecha(partes[2].trim());
+                        LocalDate fechaDevolucionEsperada = parseFecha(partes[3].trim());
+                        LocalDate fechaDevolucionReal = parseFecha(partes.length > 4 ? partes[4].trim() : "");
 
-                    // Crear el préstamo
-                    Prestamo prestamo = new Prestamo(libro, miembro, fechaPrestamo, fechaDevolucionEsperada, fechaDevolucionReal);
-                    prestamos.add(prestamo);
+                        // Crear el préstamo
+                        Prestamo prestamo = new Prestamo(libro, miembro, fechaPrestamo, fechaDevolucionEsperada, fechaDevolucionReal);
+                        prestamos.add(prestamo);
+                    } else {
+                        System.out.println("Libro o miembro no encontrado para la línea: " + linea);
+                    }
                 } else {
-                    System.out.println("Libro o miembro no encontrado para la línea: " + linea);
+                    System.out.println("Formato incorrecto en la línea: " + linea);
                 }
-            } else {
-                System.out.println("Formato incorrecto en la línea: " + linea);
             }
+        } catch (IOException e) {
+            System.out.println("Error al cargar préstamos: " + e.getMessage());
+            throw e;
         }
-    } catch (IOException e) {
-        System.out.println("Error al cargar préstamos: " + e.getMessage());
-        throw e;
+        return prestamos;
     }
-    return prestamos;
-}
 
 // Parsear fecha con manejo de valores nulos
-private static LocalDate parseFecha(String fecha) {
-    if (fecha == null || fecha.trim().isEmpty()) {
-        return null;
+    private static LocalDate parseFecha(String fecha) {
+        if (fecha == null || fecha.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(fecha);
+        } catch (Exception e) {
+            System.out.println("Error al parsear la fecha: " + fecha);
+            return null;
+        }
     }
-    try {
-        return LocalDate.parse(fecha);
-    } catch (Exception e) {
-        System.out.println("Error al parsear la fecha: " + fecha);
-        return null;
-    }
-}
 
 // Buscar libro por ISBN en la lista de libros
-private static Libro buscarLibroPorISBN(String isbn, List<Libro> libros) {
-    for (Libro libro : libros) {
-        if (libro.getISBN().get().equals(isbn)) {
-            return libro;
+    private static Libro buscarLibroPorISBN(String isbn, List<Libro> libros) {
+        for (Libro libro : libros) {
+            if (libro.getISBN().get().equals(isbn)) {
+                return libro;
+            }
         }
+        return null;
     }
-    return null;
-}
 
 // Buscar miembro por ID en la lista de miembros
-private static Miembro buscarMiembroPorID(String id, List<Miembro> miembros) {
-    for (Miembro miembro : miembros) {
-        if (miembro.getId().get().equals(id)) {
-            return miembro;
+    private static Miembro buscarMiembroPorID(String id, List<Miembro> miembros) {
+        for (Miembro miembro : miembros) {
+            if (miembro.getId().get().equals(id)) {
+                return miembro;
+            }
+        }
+        return null;
+    }
+// Guardar sucursales en un archivo CSV (solo nombre y dirección)
+ public static void guardarSucursalesEnCSV(List<Sucursal> sucursales, String archivo) throws IOException {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(archivo))) {
+            writer.println("Nombre,Direccion"); // Agregar encabezado
+            for (Sucursal sucursal : sucursales) {
+                writer.println(sucursal.getNombre().get() + "," + sucursal.getDireccion().get());
+            }
+        } catch (IOException e) {
+            System.out.println("Error al guardar sucursales: " + e.getMessage());
+            throw e;
         }
     }
-    return null;
-}
+
+    // Cargar sucursales desde un archivo CSV
+    public static List<Sucursal> cargarSucursalesDesdeCSV(String archivo) throws IOException {
+        List<Sucursal> sucursales = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            reader.readLine(); // Saltar la línea de encabezado
+            while ((linea = reader.readLine()) != null) {
+                String[] partes = linea.split(",");
+                if (partes.length == 2) {
+                    Sucursal sucursal = new Sucursal(partes[0].trim(), partes[1].trim());
+                    sucursales.add(sucursal);
+                } else {
+                    System.out.println("Formato incorrecto en la línea: " + linea);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error al cargar sucursales: " + e.getMessage());
+            throw e;
+        }
+        return sucursales;
+    }
 
 }

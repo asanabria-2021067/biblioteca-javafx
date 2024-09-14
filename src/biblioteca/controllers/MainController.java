@@ -15,28 +15,9 @@ public class MainController {
     private Sucursal sucursalActual;
 
     public void initialize() {
-        sucursalActual = new Sucursal("Sucursal Central", "Calle Principal 123");
          mainTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if (newTab != null) {
-                String tabText = newTab.getText();
-                switch (tabText) {
-                    case "Libros":
-                        // Lógica para actualizar la vista de libros si es necesario
-                        break;
-                    case "Miembros":
-                        // Lógica para actualizar la vista de miembros si es necesario
-                        break;
-                    case "Préstamos":
-                        // Lógica para actualizar la vista de préstamos
-                        PrestamoController prestamoController = (PrestamoController) getController("/biblioteca/views/PrestamoView.fxml");
-                        if (prestamoController != null) {
-                            prestamoController.cargarDatos();
-                        }
-                        break;
-                    case "Estadísticas":
-                        // Lógica para actualizar la vista de estadísticas si es necesario
-                        break;
-                }
+             
             }
         });
     }

@@ -2,14 +2,15 @@ package biblioteca.models;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 /**
  * Representa una sucursal de la biblioteca.
  * @author angel
  */
 public class Sucursal {
-    private String nombre;
-    private String direccion;
+    private StringProperty nombre;
+    private StringProperty direccion;
     private List<Libro> libros;
     private List<Prestamo> prestamos;
     private List<Miembro> miembros;
@@ -22,34 +23,34 @@ public class Sucursal {
      * @param prestamos Lista de préstamos registrados en la sucursal.
      */
     public Sucursal(String nombre, String direccion, List<Libro> libros, List<Prestamo> prestamos, List<Miembro> miembros) {
-        this.nombre = nombre;
-        this.direccion = direccion;
+        this.nombre = new SimpleStringProperty(nombre);
+        this.direccion = new SimpleStringProperty(direccion);
         this.libros = libros;
         this.prestamos = prestamos;
         this.miembros = miembros;
     }
 
     public Sucursal(String nombre, String direccion) {
-        this.nombre = nombre;
-        this.direccion = direccion;
+        this.nombre = new SimpleStringProperty(nombre);
+        this.direccion = new SimpleStringProperty(direccion);
         this.libros = new ArrayList<>();
         this.prestamos = new ArrayList<>();
         this.miembros = new ArrayList<>(); // Inicializa la lista de miembros
     }
 
-    public String getNombre() {
+    public StringProperty getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    public void setNombre(StringProperty nombre) {
         this.nombre = nombre;
     }
 
-    public String getDireccion() {
+    public StringProperty getDireccion() {
         return direccion;
     }
 
-    public void setDireccion(String direccion) {
+    public void setDireccion(StringProperty direccion) {
         this.direccion = direccion;
     }
 
