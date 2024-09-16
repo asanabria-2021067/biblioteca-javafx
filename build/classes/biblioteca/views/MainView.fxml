@@ -8,6 +8,13 @@
     <children>
         <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE">
             <tabs>
+                <Tab text="Sucursales">
+                    <content>
+                        <AnchorPane prefHeight="252.0" prefWidth="625.0">
+                            <fx:include source="SucursalesView.fxml" />
+                        </AnchorPane>
+                    </content>
+                </Tab>
                 <Tab text="Libros">
                     <content>
                         <AnchorPane prefHeight="252.0" prefWidth="625.0">

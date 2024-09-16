@@ -14,40 +14,52 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import java.util.Optional;
 
+/**
+ * Controlador para la gestión de miembros en la aplicación de biblioteca. 
+ * Permite visualizar, agregar, editar y eliminar miembros desde la interfaz gráfica.
+ * 
+ * @author Angel Sanabria, Javier Alvarado
+ * @version 1.0
+ * @since 2024-09-04
+ * @lastModified 2024-09-06
+ */
 public class MiembroController {
 
     @FXML
-    private TableView<Miembro> tablaMiembros;
+    private TableView<Miembro> tablaMiembros; // Tabla que muestra la lista de miembros
 
     @FXML
-    private TableColumn<Miembro, String> columnaID;
+    private TableColumn<Miembro, String> columnaID; // Columna para el ID del miembro
 
     @FXML
-    private TableColumn<Miembro, String> columnaNombre;
+    private TableColumn<Miembro, String> columnaNombre; // Columna para el nombre del miembro
 
     @FXML
-    private TableColumn<Miembro, String> columnaEmail;
+    private TableColumn<Miembro, String> columnaEmail; // Columna para el email del miembro
 
     @FXML
-    private TableColumn<Miembro, String> columnaTelefono;
+    private TableColumn<Miembro, String> columnaTelefono; // Columna para el teléfono del miembro
 
     @FXML
-    private TextField textFieldId;
+    private TextField textFieldId; // Campo de texto para el ID del miembro
 
     @FXML
-    private TextField textFieldNombre;
+    private TextField textFieldNombre; // Campo de texto para el nombre del miembro
 
     @FXML
-    private TextField textFieldEmail;
+    private TextField textFieldEmail; // Campo de texto para el email del miembro
 
     @FXML
-    private TextField textFieldTelefono;
+    private TextField textFieldTelefono; // Campo de texto para el teléfono del miembro
 
-    private ObservableList<Miembro> listaMiembros;
-    private Sucursal sucursal;
+    private ObservableList<Miembro> listaMiembros; // Lista observable de miembros
+    private Sucursal sucursal; // Sucursal asociada
 
-    private static final String RUTA_MIEMBROS = "src/biblioteca/db/miembros.csv";
-    
+    private static final String RUTA_MIEMBROS = "src/biblioteca/db/miembros.csv"; // Ruta del archivo CSV
+
+    /**
+     * Inicializa el controlador. Carga los miembros desde el archivo CSV y configura las columnas de la tabla.
+     */
     @FXML
     public void initialize() {
         sucursal = new Sucursal("Sucursal Central", "Calle Principal 123");
@@ -63,9 +75,13 @@ public class MiembroController {
         columnaTelefono.setCellValueFactory(cellData -> cellData.getValue().getTelefono());
 
         tablaMiembros.setItems(listaMiembros);
-
     }
 
+    /**
+     * Carga los datos de un miembro en los campos de texto.
+     * 
+     * @param miembro El miembro del cual se van a cargar los datos.
+     */
     private void cargarDatosEnCampos(Miembro miembro) {
         if (miembro != null) {
             textFieldId.setText(miembro.getId().get());
@@ -81,6 +97,9 @@ public class MiembroController {
         }
     }
 
+    /**
+     * Edita el miembro seleccionado en la tabla con los datos ingresados en los campos de texto.
+     */
     @FXML
     private void editarMiembro() {
         Miembro miembroSeleccionado = tablaMiembros.getSelectionModel().getSelectedItem();
@@ -99,6 +118,9 @@ public class MiembroController {
         }
     }
 
+    /**
+     * Agrega un nuevo miembro a la lista y guarda los cambios en el archivo CSV.
+     */
     @FXML
     private void handleAgregarMiembro() {
         String id = textFieldId.getText();
@@ -125,6 +147,12 @@ public class MiembroController {
         textFieldTelefono.clear();
     }
 
+    /**
+     * Muestra una alerta de error con el título y mensaje proporcionados.
+     * 
+     * @param titulo El título de la alerta.
+     * @param mensaje El mensaje de la alerta.
+     */
     private void mostrarAlertaError(String titulo, String mensaje) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(titulo);
@@ -133,6 +161,9 @@ public class MiembroController {
         alert.showAndWait();
     }
 
+    /**
+     * Elimina el miembro seleccionado de la lista y guarda los cambios en el archivo CSV.
+     */
     @FXML
     private void eliminarMiembro() {
         Miembro miembroSeleccionado = tablaMiembros.getSelectionModel().getSelectedItem();
@@ -148,4 +179,3 @@ public class MiembroController {
         }
     }
 }
-

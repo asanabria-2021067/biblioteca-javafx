@@ -11,34 +11,46 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
-
 import java.util.Optional;
 
+/**
+ * Controlador para la vista de gestión de libros en la aplicación de biblioteca.
+ * Maneja las operaciones de agregar, editar y eliminar libros, así como la carga
+ * y guardado de datos en un archivo CSV.
+ * 
+ * @author Angel Sanabria, Javier Alvarado
+ * @version 1.0
+ * @since 2024-09-04
+ * @lastModified 2024-09-06
+ */
 public class LibroController {
 
     @FXML
-    private TableView<Libro> tablaLibros;
+    private TableView<Libro> tablaLibros; // Tabla que muestra los libros
 
     @FXML
-    private TableColumn<Libro, String> columnaISBN;
+    private TableColumn<Libro, String> columnaISBN; // Columna para el ISBN del libro
 
     @FXML
-    private TableColumn<Libro, String> columnaTitulo;
+    private TableColumn<Libro, String> columnaTitulo; // Columna para el título del libro
 
     @FXML
-    private TableColumn<Libro, String> columnaAutor;
+    private TableColumn<Libro, String> columnaAutor; // Columna para el autor del libro
 
     @FXML
-    private TableColumn<Libro, Integer> columnaAnio;
+    private TableColumn<Libro, Integer> columnaAnio; // Columna para el año de publicación del libro
 
     @FXML
-    private TableColumn<Libro, String> columnaGenero;
+    private TableColumn<Libro, String> columnaGenero; // Columna para el género del libro
 
-    private ObservableList<Libro> listaLibros;
-    private Sucursal sucursal;
+    private ObservableList<Libro> listaLibros; // Lista de libros que se muestra en la tabla
+    private Sucursal sucursal; // Sucursal asociada a los libros
     
-    private static final String RUTA_LIBROS = "src/biblioteca/db/libros.csv";
+    private static final String RUTA_LIBROS = "src/biblioteca/db/libros.csv"; // Ruta del archivo CSV
 
+    /**
+     * Inicializa el controlador. Carga los libros desde el archivo CSV y configura las columnas de la tabla.
+     */
     @FXML
     public void initialize() {
         sucursal = new Sucursal("Sucursal Central", "Calle Principal 123");
@@ -49,6 +61,7 @@ public class LibroController {
             mostrarAlertaError("Error de Carga", "No se pudieron cargar los libros desde el archivo CSV.");
         }
 
+        // Configura las columnas de la tabla con las propiedades del libro
         columnaISBN.setCellValueFactory(cellData -> cellData.getValue().ISBNProperty());
         columnaTitulo.setCellValueFactory(cellData -> cellData.getValue().tituloProperty());
         columnaAutor.setCellValueFactory(cellData -> cellData.getValue().autorProperty());
@@ -58,7 +71,11 @@ public class LibroController {
         tablaLibros.setItems(listaLibros);
     }
 
-@FXML
+    /**
+     * Agrega un nuevo libro a la lista y lo guarda en el archivo CSV.
+     * Solicita al usuario los detalles del libro mediante diálogos de entrada.
+     */
+    @FXML
     private void agregarLibro() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Agregar Libro");
@@ -83,6 +100,12 @@ public class LibroController {
         }
     }
 
+    /**
+     * Solicita al usuario una entrada de texto mediante un diálogo de entrada.
+     * 
+     * @param mensaje Mensaje que se muestra en el diálogo de entrada.
+     * @return La entrada del usuario como una cadena de texto.
+     */
     private String obtenerEntrada(String mensaje) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Entrada");
@@ -91,11 +114,14 @@ public class LibroController {
         return resultado.orElse("");
     }
 
+    /**
+     * Edita el libro seleccionado en la tabla. Solicita al usuario los nuevos datos del libro.
+     * Actualiza los valores del libro en la tabla y en el archivo CSV.
+     */
     @FXML
     private void editarLibro() {
         Libro libroSeleccionado = tablaLibros.getSelectionModel().getSelectedItem();
         if (libroSeleccionado != null) {
-            // Usamos el valor del título para prellenar el diálogo de edición
             TextInputDialog dialog = new TextInputDialog(libroSeleccionado.getTitulo().get());
             dialog.setTitle("Editar Libro");
             dialog.setHeaderText("Editar datos del libro seleccionado:");
@@ -105,12 +131,11 @@ public class LibroController {
             result.ifPresent(datos -> {
                 String[] partes = datos.split(",");
                 if (partes.length == 4) {
-                    // Actualizamos los valores del libro seleccionado
                     libroSeleccionado.getTitulo().set(partes[0]);
                     libroSeleccionado.getAutor().set(partes[1]);
                     libroSeleccionado.getAnioPublicacion().set(Integer.parseInt(partes[2]));
                     libroSeleccionado.getGenero().set(partes[3]);
-                    tablaLibros.refresh(); // Refrescamos la tabla para mostrar los cambios
+                    tablaLibros.refresh(); // Refresca la tabla para mostrar los cambios
                 } else {
                     mostrarAlertaError("Datos incorrectos", "Formato incorrecto. Debe ingresar todos los campos.");
                 }
@@ -120,6 +145,10 @@ public class LibroController {
         }
     }
 
+    /**
+     * Elimina el libro seleccionado en la tabla y actualiza el archivo CSV.
+     * Muestra una alerta si no se ha seleccionado ningún libro.
+     */
     @FXML
     private void eliminarLibro() {
         Libro libroSeleccionado = tablaLibros.getSelectionModel().getSelectedItem();
@@ -129,13 +158,19 @@ public class LibroController {
             try {
                 CsvController.guardarLibrosEnCSV(listaLibros, RUTA_LIBROS);
             } catch (IOException e) {
-                mostrarAlertaError("Error de Guardado", "No se pudieron guardar los miembros en el archivo CSV.");
+                mostrarAlertaError("Error de Guardado", "No se pudieron guardar los libros en el archivo CSV.");
             }
         } else {
             mostrarAlertaError("Sin selección", "Debe seleccionar un libro para eliminar.");
         }
     }
 
+    /**
+     * Muestra una alerta de error con el título y mensaje proporcionados.
+     * 
+     * @param titulo El título de la alerta de error.
+     * @param mensaje El mensaje de la alerta de error.
+     */
     private void mostrarAlertaError(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titulo);
